@@ -7,14 +7,22 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import impls.ClientImpl;
 import interfaces.ClientIntf;
+import interfaces.ServerIntf;
 
 public class Login {
 	public static void main(String[] args) {
 		try {
-			Registry registry = LocateRegistry.getRegistry("localhost", 2022);
-			ClientIntf demoIntf = (ClientIntf) registry.lookup(ClientIntf.class.getSimpleName());
-			System.out.println(demoIntf.login(InetAddress.getLocalHost().getHostName()));
+			
+			Registry registry = LocateRegistry.getRegistry("10.10.59.121", 2022);
+			ServerIntf demoIntf = (ServerIntf) registry.lookup(ServerIntf.class.getSimpleName());
+			String clientIp=  demoIntf.login(InetAddress.getLocalHost().getHostName());
+			
+			System.setProperty("java.rmi.client.hostname", clientIp);
+			registry = LocateRegistry.createRegistry(2023);
+			registry.rebind(ClientIntf.class.getSimpleName(), new ClientImpl());
+			
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {
@@ -22,5 +30,6 @@ public class Login {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		System.out.println("asd");
 	}
 }

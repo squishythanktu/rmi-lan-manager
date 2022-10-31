@@ -1,8 +1,10 @@
 package ui;
 
 import java.awt.EventQueue;
+import java.net.UnknownHostException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ServerNotActiveException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import impls.ClientImpl;
-import interfaces.ClientIntf;
+import helpers.IpAddressHelper;
+import impls.ServerImpl;
+import interfaces.ServerIntf;
 import models.Computer;
 
 public class Main extends JFrame {
@@ -36,6 +39,8 @@ public class Main extends JFrame {
 
 	/**
 	 * Launch the application.
+	 * @throws UnknownHostException 
+	 * @throws ServerNotActiveException 
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -46,9 +51,9 @@ public class Main extends JFrame {
 					frame.changeLayout(new ZoneView(frame));
 
 					// start server rmi
-					System.setProperty("java.rmi.server.hostname", "192.168.1.5");
+					System.setProperty("java.rmi.server.hostname", "10.10.59.121");
 					Registry registry = LocateRegistry.createRegistry(2022);
-					registry.rebind(ClientIntf.class.getSimpleName(), new ClientImpl(frame));
+					registry.rebind(ServerIntf.class.getSimpleName(), new ServerImpl(frame));
 					System.out.println("Server started");
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -12,6 +12,11 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.net.InetAddress;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -36,6 +41,8 @@ import javax.swing.event.ListSelectionListener;
 
 import com.mysql.cj.xdevapi.ClientImpl;
 
+import interfaces.ClientIntf;
+import interfaces.ServerIntf;
 import models.Computer;
 import repos.ComputerRepository;
 import javax.swing.JTextField;
@@ -106,18 +113,15 @@ public class ComputerView extends View {
 					return;	
 				}
 				else {
-			        // Lấy màn hình mặc định của hệ thống
-					GraphicsEnvironment env=GraphicsEnvironment.getLocalGraphicsEnvironment();
-					GraphicsDevice screen=env.getDefaultScreenDevice();
-			         // Chuẩn bị robot thao tác màn hình
-					Robot robot;
 					try {
-						robot = new Robot(screen);
-						Dimension d=Toolkit.getDefaultToolkit().getScreenSize();
-						BufferedImage capture=robot.createScreenCapture(new Rectangle(0,0,d.width,d.height));
-						JLabel picLabel = new JLabel(new ImageIcon(capture));
+						Registry registry = LocateRegistry.getRegistry(c.getIpAddress(), 2023);
+						ClientIntf demoIntf = (ClientIntf) registry.lookup(ClientIntf.class.getSimpleName());
+						JLabel picLabel = new JLabel(new ImageIcon(demoIntf.getDesktop()));
 						JOptionPane.showMessageDialog(null, picLabel, "Capture img", JOptionPane.PLAIN_MESSAGE, null);
-					} catch (AWTException e1) {
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NotBoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
