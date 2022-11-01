@@ -51,7 +51,11 @@ public class Main extends JFrame {
 					frame.changeLayout(new ZoneView(frame));
 
 					// start server rmi
+<<<<<<< HEAD
 					System.setProperty("java.rmi.server.hostname", "10.10.59.121");
+=======
+					System.setProperty("java.rmi.server.hostname", "192.168.9.25");
+>>>>>>> 836a77c (done)
 					Registry registry = LocateRegistry.createRegistry(2022);
 					registry.rebind(ServerIntf.class.getSimpleName(), new ServerImpl(frame));
 					System.out.println("Server started");

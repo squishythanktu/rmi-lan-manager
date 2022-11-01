@@ -134,6 +134,7 @@ public class ComputerView extends View {
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
 		JScrollPane scrollPane = new JScrollPane();
+<<<<<<< HEAD
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -173,6 +174,8 @@ public class ComputerView extends View {
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
 					.addContainerGap())
 		);
+=======
+>>>>>>> 836a77c (done)
 		list = new JList<>(new Vector<Computer>(computers));
 		scrollPane.setViewportView(list);
 		list.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -199,6 +202,54 @@ public class ComputerView extends View {
 						}
 					}
 				});
+<<<<<<< HEAD
+=======
+		GroupLayout groupLayout = new GroupLayout(this);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 364, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(19)
+									.addComponent(btnOnline, GroupLayout.PREFERRED_SIZE, 118, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(18)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(btnAll, GroupLayout.PREFERRED_SIZE, 118, GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnOffline, GroupLayout.PREFERRED_SIZE, 118, GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnCapture, GroupLayout.PREFERRED_SIZE, 118, GroupLayout.PREFERRED_SIZE)))))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(207)
+							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 226, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(22, Short.MAX_VALUE))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel)
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 361, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnBack)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnOnline)
+							.addGap(32)
+							.addComponent(btnOffline)
+							.addGap(31)
+							.addComponent(btnAll)
+							.addGap(32)
+							.addComponent(btnCapture)))
+					.addGap(10))
+		);
+>>>>>>> 836a77c (done)
 		setLayout(groupLayout);
 
 	}
