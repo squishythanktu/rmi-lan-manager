@@ -14,12 +14,7 @@ import interfaces.ServerIntf;
 public class Login {
 	public static void main(String[] args) {
 		try {
-			
-<<<<<<< HEAD
-			Registry registry = LocateRegistry.getRegistry("10.10.59.121", 2022);
-=======
-			Registry registry = LocateRegistry.getRegistry("192.168.9.25", 2022);
->>>>>>> 836a77c (done)
+			Registry registry = LocateRegistry.getRegistry("192.168.1.58", 2022);
 			ServerIntf demoIntf = (ServerIntf) registry.lookup(ServerIntf.class.getSimpleName());
 			String clientIp=  demoIntf.login(InetAddress.getLocalHost().getHostName());
 			
@@ -34,6 +29,6 @@ public class Login {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		System.out.println("asd");
+		System.out.println("login successfully!");
 	}
 }

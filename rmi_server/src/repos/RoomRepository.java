@@ -101,4 +101,19 @@ public class RoomRepository {
 		}
 		return false;
 	}
+	public String getRoomName(int roomId) {
+		String sql = "SELECT * FROM room WHERE id=?";
+		String name = "";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, roomId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				name = rs.getString(2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return name;
+	}
 }

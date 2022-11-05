@@ -70,14 +70,14 @@ public class ComputerRepository {
 	}
 
 	public boolean logout(String ipAddress) {
-		return updateOnline(ipAddress, 0);
+		return delete(ipAddress);
 	}
 	
-	public boolean delete(int id) {
-		String sql = "delete from computer where id=?";
+	public boolean delete(String ipAddress) {
+		String sql = "delete from computer where ip_address=?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, id);
+			ps.setString(1, ipAddress);
 			ps.execute();
 			return true;
 		} catch (SQLException e) {
