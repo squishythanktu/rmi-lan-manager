@@ -33,7 +33,6 @@ public class RoomRepository {
 	}
 
 	public List<Room> getByZone(int zoneId) {
-//		String sql = "SELECT * FROM room WHERE zone_id=?";
 		String sql = "SELECT r.*,\r\n" + "       count(c.room_id) as count_computer,\r\n"
 				+ "       (SELECT COUNT(c.room_id)\r\n" + "        from computer as c\r\n"
 				+ "        where c.room_id = r.id\r\n" + "          and c.online = 1)\r\n"
@@ -100,5 +99,20 @@ public class RoomRepository {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	public String getRoomName(int roomId) {
+		String sql = "SELECT * FROM room WHERE id=?";
+		String name = "";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, roomId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				name = rs.getString(2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return name;
 	}
 }

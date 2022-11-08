@@ -45,6 +45,9 @@ import interfaces.ClientIntf;
 import interfaces.ServerIntf;
 import models.Computer;
 import repos.ComputerRepository;
+import repos.RoomRepository;
+import repos.ZoneRepository;
+
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 
@@ -55,9 +58,12 @@ public class ComputerView extends View {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ComputerRepository computerRepo;
+	private RoomRepository roomRepo;
+	private ZoneRepository zoneRepo;
 	private List<Computer> computers;
 	private JList<Computer> list;
 	private int roomId;
+	private int zoneId;
 
 	/**
 	 * Create the panel.
@@ -65,11 +71,14 @@ public class ComputerView extends View {
 	 */
 	public ComputerView(Main main, int zoneId, int roomId) {
 		this.roomId = roomId;
+		this.zoneId = zoneId;
 		computerRepo = new ComputerRepository();
+		roomRepo = new RoomRepository();
+		zoneRepo = new ZoneRepository();
 		computers = computerRepo.getAllByRoom(roomId);
 
 		JButton btnBack = new JButton("Back");
-		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				main.changeLayout(new RoomView(main, zoneId));
@@ -77,7 +86,7 @@ public class ComputerView extends View {
 		});
 
 		JButton btnOnline = new JButton("Show online");
-		btnOnline.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnOnline.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnOnline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateJlist(computers.stream().filter(c -> c.isOnline()).collect(Collectors.toList()));
@@ -85,7 +94,7 @@ public class ComputerView extends View {
 		});
 
 		JButton btnOffline = new JButton("Show offline");
-		btnOffline.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnOffline.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnOffline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateJlist(computers.stream().filter(c -> !c.isOnline()).collect(Collectors.toList()));
@@ -93,14 +102,14 @@ public class ComputerView extends View {
 		});
 
 		JButton btnAll = new JButton("Show All");
-		btnAll.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnAll.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				reload();
 			}
 		});
 		
-		JButton btnCapture = new JButton("Capture img");
+		JButton btnCapture = new JButton("Capture");
 		btnCapture.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Computer c = list.getSelectedValue();
@@ -128,50 +137,84 @@ public class ComputerView extends View {
 				}
 			}
 		});
-		btnCapture.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnCapture.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lblNewLabel = new JLabel("Computer View");
+		JLabel lblNewLabel = new JLabel("Computer View ("
+										+ roomRepo.getRoomName(roomId) + " - "
+										+ zoneRepo.getZoneName(zoneId) + ")");		
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
 		JScrollPane scrollPane = new JScrollPane();
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Computer c = list.getSelectedValue();
+				if(c != null) {
+					if(!c.isOnline()) {
+						boolean isDeleted = computerRepo.delete(c.getId());
+						if(isDeleted) {
+							reload();
+						}
+						else {
+							JOptionPane.showMessageDialog(new JFrame(), "Delele unsuccessfully!");
+							return;
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(new JFrame(), "Computer is online, please delete later!");
+						return;
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(new JFrame(), "Please choose 1 computer to delete");
+					return;
+				}
+			}
+		});
+		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(210, Short.MAX_VALUE)
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 226, GroupLayout.PREFERRED_SIZE)
-					.addGap(207))
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-					.addGap(23)
-					.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-					.addGap(26)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 343, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(btnCapture, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnOffline, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnOnline, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
-						.addComponent(btnAll, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-					.addContainerGap(26, Short.MAX_VALUE))
+					.addGap(14)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(btnDelete, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnCapture, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnAll, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnOffline, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnBack, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnOnline, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(26)
+							.addComponent(lblNewLabel))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(18)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 486, GroupLayout.PREFERRED_SIZE)))
+					.addGap(12))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNewLabel)
 					.addGap(18)
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnBack)
 						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnBack)
+							.addGap(28)
 							.addComponent(btnOnline)
-							.addGap(32)
+							.addGap(29)
 							.addComponent(btnOffline)
 							.addGap(33)
 							.addComponent(btnAll)
-							.addGap(33)
-							.addComponent(btnCapture, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
-					.addContainerGap())
+							.addGap(26)
+							.addComponent(btnCapture, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+							.addGap(26)
+							.addComponent(btnDelete, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 375, GroupLayout.PREFERRED_SIZE))
+					.addGap(18))
 		);
 		list = new JList<>(new Vector<Computer>(computers));
 		scrollPane.setViewportView(list);

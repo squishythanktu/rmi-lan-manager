@@ -28,6 +28,7 @@ import javax.swing.event.ListSelectionListener;
 
 import models.Room;
 import repos.RoomRepository;
+import repos.ZoneRepository;
 
 public class RoomView extends View {
 
@@ -36,6 +37,7 @@ public class RoomView extends View {
 	 */
 	private static final long serialVersionUID = 1L;
 	private RoomRepository roomRepo;
+	private ZoneRepository zoneRepo;
 	private List<Room> rooms;
 	private JList<Room> list;
 	private int zoneId;
@@ -47,19 +49,20 @@ public class RoomView extends View {
 	public RoomView(Main main, int zoneId) {
 		this.zoneId = zoneId;
 		roomRepo = new RoomRepository();
+		zoneRepo = new ZoneRepository();
 		// get all room by zone
 		rooms = roomRepo.getByZone(zoneId);
 
 		JButton btnBack = new JButton("Back");
-		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				main.changeLayout(new ZoneView(main));
 			}
 		});
 
-		JButton btnSort = new JButton("Sort offline");
-		btnSort.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		JButton btnSort = new JButton("Sort online");
+		btnSort.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSort.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				rooms = roomRepo.getByZone(zoneId);
@@ -77,37 +80,60 @@ public class RoomView extends View {
 			}
 		});
 		
-		JLabel lblRoomView = new JLabel("Room View");
+		JLabel lblRoomView = new JLabel("Room View (" + zoneRepo.getZoneName(zoneId) + ")");
 		lblRoomView.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
 		JScrollPane scrollPane = new JScrollPane();
+		
+		JButton btnSortOnline = new JButton("Sort offline");
+		btnSortOnline.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rooms = roomRepo.getByZone(zoneId);
+				Collections.sort(rooms, new Comparator<Room>() {
+					@Override
+					public int compare(Room o1, Room o2) {
+						if (o1.getOffline() > o2.getOffline())
+							return 1;
+						return -1;
+					}
+				});
+				DefaultListModel<Room> dlm = new DefaultListModel<>();
+				rooms.forEach(r -> dlm.addElement(r));
+				list.setModel(dlm);
+			}
+		});
+		btnSortOnline.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addGap(24)
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(btnSort, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(btnBack, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
+						.addComponent(btnSortOnline, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
+					.addGap(12)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
-							.addComponent(lblRoomView, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
-							.addGap(63)
-							.addComponent(btnSort)))
-					.addGap(23))
+						.addComponent(lblRoomView, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(23)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-							.addComponent(btnBack)
-							.addComponent(btnSort))
-						.addComponent(lblRoomView, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+					.addComponent(lblRoomView, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 352, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(18, Short.MAX_VALUE))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnBack)
+							.addGap(29)
+							.addComponent(btnSort)
+							.addGap(33)
+							.addComponent(btnSortOnline, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(21, Short.MAX_VALUE))
 		);
 		
 				list = new JList<>(new Vector<Room>(rooms));
@@ -124,7 +150,10 @@ public class RoomView extends View {
 						Component renderer = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 						if (renderer instanceof JLabel && value instanceof Room) {
 							Room r = (Room) value;
-							String text = r.getName() + " - total: " + r.getSumComputer() + ", online: " + r.getOnline();
+							String text = r.getName() + 
+											"("+ r.getStartIp()+ " - " + r.getEndIp() + ")" + 
+											" - total: " + r.getSumComputer() + 
+											", online: " + r.getOnline();
 							((JLabel) renderer).setText(text);
 						}
 						return renderer;

@@ -15,7 +15,7 @@ public class Login {
 	public static void main(String[] args) {
 		try {
 			
-			Registry registry = LocateRegistry.getRegistry("10.10.59.121", 2022);
+			Registry registry = LocateRegistry.getRegistry("172.20.10.10", 2022);
 			ServerIntf demoIntf = (ServerIntf) registry.lookup(ServerIntf.class.getSimpleName());
 			String clientIp=  demoIntf.login(InetAddress.getLocalHost().getHostName());
 			

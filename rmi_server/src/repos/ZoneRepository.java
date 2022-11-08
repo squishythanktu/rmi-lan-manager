@@ -87,10 +87,21 @@ public class ZoneRepository {
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException {
-//		Model z = new Model();
-//		z.setName("hello");
-//		z.setId(1);
 		new ZoneRepository().getAll().forEach(System.out::println);
-//		System.out.println(new ZoneRepository().update(z));
+	}
+	public String getZoneName(int zoneId) {
+		String sql = "SELECT * FROM zone WHERE id=?";
+		String name = "";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, zoneId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				name = rs.getString(2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return name;
 	}
 }
