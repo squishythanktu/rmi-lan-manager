@@ -10,7 +10,7 @@ import interfaces.ServerIntf;
 public class Logout {
 	public static void main(String[] args) {
 		try {
-			Registry registry = LocateRegistry.getRegistry("192.168.1.58", 2022);
+			Registry registry = LocateRegistry.getRegistry("192.168.1.8", 2022);
 			ServerIntf demoIntf = (ServerIntf) registry.lookup(ServerIntf.class.getSimpleName());
 			System.out.println(demoIntf.logout());
 			

@@ -18,7 +18,6 @@ public class Room extends Zone {
 		super(id, name, startIp, endIp, created, updated);
 		setSumComputer(countComputer);
 		setOnline(online);
-		setOffline(getSumComputer() - getOnline());
 	}
 
 	public Room(String name, String startIp, String endIp, int zoneId) {
@@ -50,12 +49,5 @@ public class Room extends Zone {
 		this.online = online;
 	}
 
-	public int getOffline() {
-		return offline;
-	}
-
-	public void setOffline(int offline) {
-		this.offline = offline;
-	}
 
 }

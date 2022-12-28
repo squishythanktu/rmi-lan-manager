@@ -1,6 +1,10 @@
 package repos;
 
 import java.awt.image.BufferedImage;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +12,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import interfaces.ClientIntf;
 import models.Computer;
 
 public class ComputerRepository {
@@ -85,21 +95,20 @@ public class ComputerRepository {
 		}
 		return false;
 	}
-	
-	public boolean update(Computer computer) {
-		String sql = "update computer set name=?, room_id=?, ip_address=? where id=?";
-		try {
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, computer.getName());
-			ps.setInt(2, computer.getRoomId());
-			ps.setString(3, computer.getIpAddress());
-			ps.setInt(4, computer.getId());
-			ps.execute();
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	
+//	
+//	public boolean update(Computer computer) {
+//		String sql = "update computer set name=?, room_id=?, ip_address=? where id=?";
+//		try {
+//			PreparedStatement ps = conn.prepareStatement(sql);
+//			ps.setString(1, computer.getName());
+//			ps.setInt(2, computer.getRoomId());
+//			ps.setString(3, computer.getIpAddress());
+//			ps.setInt(4, computer.getId());
+//			ps.execute();
+//			return true;
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return false;
+//	}
 }

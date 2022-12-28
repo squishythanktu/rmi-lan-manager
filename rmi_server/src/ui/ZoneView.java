@@ -219,6 +219,7 @@ public class ZoneView extends View {
 		panel.add(btnAdd);
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnAdd.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				String name = tfName.getText();
 				if (name.trim().equals("")) {
@@ -229,6 +230,7 @@ public class ZoneView extends View {
 				try {
 					startIp = new IpAddress(tfStartIp.getText());
 					endIp = new IpAddress(tfEndIp.getText());
+					// So sanh ip dau va ip cuoi 
 					if (startIp.compareTo(endIp)) {
 						JOptionPane.showMessageDialog(new JFrame(), "Invalid ip address!");
 						return;
@@ -243,18 +245,20 @@ public class ZoneView extends View {
 				} catch (Exception e1) {
 					return;
 				}
-
+				// tao zone voi ten, startip, endip da nhap 
 				Zone z = zoneRepo.create(new Zone(name, startIp.toString(), endIp.toString()));
 
 				if (z != null) {
 					JOptionPane.showMessageDialog(new JFrame(), "Create success!");
 					tfName.setText("");
-
+					// Lay khoang cach giua 2 ip cua zone
 					long sub = z.getEndIp().subtract(z.getStartIp());
-
+					// Gan gia tri start va end la gia tri start + them gia tri khoang cach chia cho so luong phong -1 
 					IpAddress start = z.getStartIp(), end = z.getStartIp().add(sub / numbersOfRoom - 1);
-
+					// Tao phong voi gia tri start va end dau` tien sau do gan gia tri start = end + 1 va end = gia tri start + gia tri khoang cach chia cho so luong phong -1 
 					for (int i = 0; i < numbersOfRoom; i++) {
+						// tao doi tuong room voi ipstart = start.toString() ham chuyen doi sang ip
+						
 						Room r = new Room("Room " + (i+1), start.toString(), end.toString(), z.getId());
 						end.plus();
 						start = end;

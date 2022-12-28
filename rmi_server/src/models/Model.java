@@ -42,15 +42,6 @@ public class Model {
 	public void setCreated(Date created) {
 		this.created = created;
 	}
-
-	public Date getUpdated() {
-		return updated;
-	}
-
-	public void setUpdated(Date updated) {
-		this.updated = updated;
-	}
-
 	@Override
 	public String toString() {
 		return "Zone [id=" + id + ", name=" + name + ", created=" + created + ", updated=" + updated + "]";

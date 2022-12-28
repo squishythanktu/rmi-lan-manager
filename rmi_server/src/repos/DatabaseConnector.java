@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 public class DatabaseConnector {
 	private static String DB_HOST = "localhost";
 	private static int DB_PORT = 3306;
-	private static String DB_NAME = "pbl4";
+	private static String DB_NAME = "cpm";
 	private static String DB_USERNAME = "root";
 	private static String DB_PASSWORD = "";
 

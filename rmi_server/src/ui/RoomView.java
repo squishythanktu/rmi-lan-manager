@@ -60,7 +60,7 @@ public class RoomView extends View {
 				main.changeLayout(new ZoneView(main));
 			}
 		});
-		
+		// Lay ten cua zone minh chon hien thi len
 		JLabel lblRoomView = new JLabel("Room View (" + zoneRepo.getZoneName(zoneId) + ")");
 		lblRoomView.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
@@ -107,7 +107,7 @@ public class RoomView extends View {
 							String text = r.getName() + " (" 
 										+ r.getStartIp() + " - "
 										+ r.getEndIp()
-										+ ") - total: " + r.getSumComputer() + ", online: " + r.getOnline();
+										+ ") - total: " + r.getSumComputer();
 							((JLabel) renderer).setText(text);
 						}
 						return renderer;

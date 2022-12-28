@@ -37,11 +37,6 @@ public class Main extends JFrame {
 		((View) getContentPane().getComponent(0)).reload();
 	}
 
-	/**
-	 * Launch the application.
-	 * @throws UnknownHostException 
-	 * @throws ServerNotActiveException 
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -51,11 +46,12 @@ public class Main extends JFrame {
 					frame.changeLayout(new ZoneView(frame));
 
 					// start server rmi
-					System.setProperty("java.rmi.server.hostname", "192.168.1.58");
+					System.setProperty("java.rmi.server.hostname", "192.168.1.8");
 					Registry registry = LocateRegistry.createRegistry(2022);
 					registry.rebind(ServerIntf.class.getSimpleName(), new ServerImpl(frame));
 					System.out.println("Server started");
-				} catch (Exception e) {
+				} catch (Exception e) 
+				{
 					e.printStackTrace();
 				}
 			}

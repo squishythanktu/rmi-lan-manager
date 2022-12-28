@@ -36,6 +36,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -85,7 +86,7 @@ public class ComputerView extends View {
 			}
 		});
 		
-		JButton btnCapture = new JButton("Capture img");
+		JButton btnCapture = new JButton("Capture Picture");
 		btnCapture.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Computer c = list.getSelectedValue();
@@ -168,15 +169,17 @@ public class ComputerView extends View {
 				return renderer;
 			}
 		});
+
+		list.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
 		
-				list.addListSelectionListener(new ListSelectionListener() {
-					@Override
-					public void valueChanged(ListSelectionEvent e) {
-						if (!e.getValueIsAdjusting()) {
-						}
-					}
-				});
+				}
+			}
+		});
 		setLayout(groupLayout);
+		
 
 	}
 

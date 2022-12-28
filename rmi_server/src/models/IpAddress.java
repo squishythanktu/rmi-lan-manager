@@ -39,7 +39,7 @@ public class IpAddress {
 		}
 		return rs;
 	}
-
+	// Tinh khoang cach 2 ip
 	public long subtract(IpAddress ipB) {
 		return Long.parseLong(ipToBinary(), 2) - Long.parseLong(ipB.ipToBinary(), 2);
 	}
@@ -51,7 +51,7 @@ public class IpAddress {
 	public void setIpAddress(int[] ipAddress) {
 		this.ipAddress = ipAddress;
 	}
-
+	// So sanh 2 ip
 	public boolean compareTo(IpAddress ipB) {
 		for (int i = 0; i < 4; i++) {
 			if (ipAddress[i] < ipB.getIpAddress()[i])
@@ -72,6 +72,7 @@ public class IpAddress {
 	
 	private String longToIp(long n) {
 		String rs = numberToBinary(n);
+		// Lap day gia tri
 		while (rs.length() < 32) {
 			rs = "0" + rs;
 		}
@@ -98,11 +99,4 @@ public class IpAddress {
 		return Arrays.stream(ipAddress).mapToObj(String::valueOf).collect(Collectors.joining("."));
 	}
 
-	public static void main(String[] args) throws Exception {
-		IpAddress ip = new IpAddress("1.255.255.255");
-		ip.plus();
-		System.out.println(ip);
-//		System.out.println(new IpAddress("10.0.0.0").subtract(new IpAddress("9.255.1.255")));
-//		System.out.println(new IpAddress().longToIp(167772159));
-	}
 }
